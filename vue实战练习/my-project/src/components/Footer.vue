@@ -1,5 +1,5 @@
 <template name="component-name">
-  <div id="push_bottom">
+  <div id="push_bottom" v-if="ashow">
     <div class="push_bottom_table">
       <a
         class="push_bottom_download"
@@ -38,7 +38,13 @@
           alt="拉勾君"
         />
       </div>
-      <div class="close_btn" data-lg-tj-id="2ip0" data-lg-tj-no="idnull" data-lg-tj-cid="idnull">
+      <div
+        class="close_btn"
+        @click="close"
+        data-lg-tj-id="2ip0"
+        data-lg-tj-no="idnull"
+        data-lg-tj-cid="idnull"
+      >
         <img
           class="close_btn_img"
           src="//www.lgstatic.com/m/images/asset/custom/list/img/download_btn_close.png"
@@ -50,9 +56,18 @@
   </div>
 </template>
 <script>
-// require("../assets/css/a.scss");
-// require("../assets/css/b.css");
-export default {};
+export default {
+  data() {
+    return {
+      ashow: 1
+    };
+  },
+  methods: {
+    close() {
+      this.ashow = 0;
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -60,7 +75,7 @@ export default {};
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 68px;
+  // bottom: 68px;
   width: 100%;
   background-color: rgba(14, 14, 14, 0.9);
   color: #fff;
@@ -72,34 +87,6 @@ export default {};
     box-sizing: border-box;
     width: 100%;
     padding: 4.3% 2.5% 3.3%;
-
-    #push_close_bg_wrap {
-      position: absolute;
-      top: -15px;
-      right: 12px;
-      width: 30px;
-      height: 15px;
-      overflow: hidden;
-    }
-
-    #push_close {
-      position: absolute;
-      top: -11px;
-      right: 16px;
-      width: 22px;
-      height: 22px;
-      border-radius: 11px;
-      background: #464646 url(/images/mobile/asset/custom/list/img/close.png)
-        center center no-repeat;
-      background-size: 10px 10px;
-    }
-
-    #push_close_bg {
-      width: 30px;
-      height: 30px;
-      border-radius: 15px;
-      background-color: rgba(0, 0, 0, 0.85);
-    }
 
     .push_bottom_row {
       &:after {

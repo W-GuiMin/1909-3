@@ -1,19 +1,18 @@
 <template>
   <div id="app">
-    <Html />
+    <Home/>
   </div>
 </template>
 
 <script>
-import Html from "./pages/Html.vue";
+require("./assets/css/style.css");
+// import CompanyDetails from "./pages/CompanyDetails.vue";
+import Home from "./pages/Home.vue";
 export default {
   name: "app",
-  components: { Html }
+  components: {
+    //  CompanyDetails
+    Home
+  }
 };
 </script>
-<style scoped>
-* {
-  margin: 0;
-  padding: 0;
-}
-</style>
