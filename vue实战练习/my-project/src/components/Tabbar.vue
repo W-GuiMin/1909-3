@@ -3,10 +3,10 @@
     <van-tabbar-item to="/home" class="tabbar__text">
       <van-icon name="wap-home-o" />职位
     </van-tabbar-item>
-    <van-tabbar-item to="/company" class="tabbar__text">
+    <van-tabbar-item to="/search" class="tabbar__text">
       <van-icon name="search" />搜索
     </van-tabbar-item>
-    <van-tabbar-item to="/order" class="tabbar__text">
+    <van-tabbar-item to="/mine" class="tabbar__text">
       <van-icon name="contact" />我的
     </van-tabbar-item>
   </van-tabbar>

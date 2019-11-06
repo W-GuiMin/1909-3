@@ -2,16 +2,16 @@
   <div>
     <van-card
       class="post"
-      v-for="(a,index) in 15"
+      v-for="(c,index) in companydataComputed"
       :key="index"
       currency
-      num="8k-16k"
-      price="今天16：33"
-      desc="前端开发[杭州]"
-      title="会搜股份"
-      thumb="//www.lgstatic.com/i/image/M00/14/FD/CgqKkVbqfmSACqtqAAAcYwhLeKk159.png"
+      :num="c.salary"
+      :price="c.createTime"
+      :desc="c.positionName"
+      :title="c.companyName"
+      :thumb="c.companyLogo"
     />
-    <p class="list-more" v-if="more" @click="Loading">加载更多</p>
+    <p class="list-more" v-if="more" @click="Loading">{{load}}</p>
     <van-button loading type="info" v-if="MoresLoading" class="list-mores" loading-text="加载中..." />
     <div id="copyright">
       <p>©2015 lagou.com, all right reserved</p>
@@ -25,7 +25,6 @@
 </template>
 <script>
 import Vue from "vue";
-import axios from "axios";
 import { Card, Button } from "vant";
 Vue.use(Card).use(Button);
 
@@ -35,7 +34,9 @@ export default {
       more: true,
       MoresLoading: false,
       timer: null,
-      companydata: []
+      companydata: [],
+      lenght: 0,
+      load: "加载更多"
     };
   },
   created() {
@@ -43,17 +44,27 @@ export default {
   },
   methods: {
     Loading() {
+      this.lenght += 15;
       clearInterval(this.timer);
       this.MoresLoading = true;
       this.more = false;
       this.timer = setInterval(() => {
         this.more = true;
         this.MoresLoading = false;
-      }, 1200);
-      axios.get("http://localhost:3000/companydata").then(({ data }) => {
-        this.companydata = this.companydata.concat(data);
-        window.console.log(this.companydata);
+      }, 1000);
+
+      this.$axios.get("http://localhost:3000/companydata").then(({ data }) => {
+        this.companydata = data;
       });
+      if (this.lenght >= 45) {
+        this.lenght = 45;
+        this.load = "已经到底了";
+      }
+    }
+  },
+  computed: {
+    companydataComputed() {
+      return this.companydata.slice(0, this.lenght);
     }
   }
 };
@@ -81,6 +92,7 @@ export default {
     color: #333;
     min-height: 0px;
     .van-card__title {
+      display: block;
       font-size: 1.6rem;
       margin-bottom: 6px;
       width: 80%;

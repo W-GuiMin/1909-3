@@ -21,4 +21,9 @@ export default {
 #push_bottom {
   bottom: 68px;
 }
+#header {
+  .left {
+    display: block;
+  }
+}
 </style>

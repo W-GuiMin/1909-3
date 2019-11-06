@@ -1,16 +1,23 @@
 <template name="component-name">
   <header id="header">
     <slot />
-    <div class="left">
+    <div class="left" @click="goback" :style="{display:left?left:'block'}">
       <span class="corner"></span>
     </div>
-    <div class="right">
+    <div class="right" :style="{display:right?right:'block'}">
       <span class="corner"></span>
     </div>
   </header>
 </template>
 <script>
-export default {};
+export default {
+  props: ["left", "right"],
+  methods: {
+    goback() {
+      window.history.go(-1);
+    }
+  }
+};
 </script>
 <style lang="scss" scoped>
 #header {
