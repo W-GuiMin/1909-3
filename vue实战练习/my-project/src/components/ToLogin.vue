@@ -1,7 +1,7 @@
 <template name="component-name">
   <div class="custom-info" v-if="logging">
     <span class="info">10秒钟定制职位</span>
-    <a class="go" href="/frontLogin.do" target="_self">去登录</a>
+    <a class="go" @click="toLogin">去登录</a>
   </div>
 </template>
 <script>
@@ -10,6 +10,13 @@ export default {
     return {
       logging: true
     };
+  },
+  methods: {
+    toLogin() {
+      this.$router.push({
+        name: "login"
+      });
+    }
   }
 };
 </script>

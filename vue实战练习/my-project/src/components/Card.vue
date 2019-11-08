@@ -10,6 +10,8 @@
       :desc="c.positionName"
       :title="c.companyName"
       :thumb="c.companyLogo"
+      @click="homeToDetails(index)"
+      v-model="c.positionId"
     />
     <p class="list-more" v-if="more" @click="Loading">{{load}}</p>
     <van-button loading type="info" v-if="MoresLoading" class="list-mores" loading-text="加载中..." />
@@ -25,6 +27,7 @@
 </template>
 <script>
 import Vue from "vue";
+// import store from "../store";
 import { Card, Button } from "vant";
 Vue.use(Card).use(Button);
 
@@ -36,7 +39,10 @@ export default {
       timer: null,
       companydata: [],
       lenght: 0,
-      load: "加载更多"
+      maxLenght: 0,
+      load: "加载更多",
+      positionId: 0,
+      companyId: 0
     };
   },
   created() {
@@ -44,7 +50,6 @@ export default {
   },
   methods: {
     Loading() {
-      this.lenght += 15;
       clearInterval(this.timer);
       this.MoresLoading = true;
       this.more = false;
@@ -52,14 +57,24 @@ export default {
         this.more = true;
         this.MoresLoading = false;
       }, 1000);
-
       this.$axios.get("http://localhost:3000/companydata").then(({ data }) => {
         this.companydata = data;
+        this.maxLenght = this.companydata.length;
       });
-      if (this.lenght >= 45) {
-        this.lenght = 45;
+      if (this.lenght <= this.maxLenght) {
+        this.lenght += 15;
+      } else {
+        this.lenght = this.maxLenght;
         this.load = "已经到底了";
       }
+    },
+    homeToDetails(index) {
+      this.positionId = this.companydata[index].positionId;
+      this.companyId = this.companydata[index].companyId;
+      this.$router.push({
+        name: "details",
+        params: { positionId: this.positionId, companyId: this.companyId }
+      });
     }
   },
   computed: {

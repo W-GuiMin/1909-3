@@ -1,18 +1,19 @@
 <template>
   <van-tabbar v-model="active" active-color="#00b38a" inactive-color="#c2cfcc" class="tab">
-    <van-tabbar-item to="/home" class="tabbar__text">
+    <van-tabbar-item to="/main/home" class="tabbar__text">
       <van-icon name="wap-home-o" />职位
     </van-tabbar-item>
-    <van-tabbar-item to="/search" class="tabbar__text">
+    <van-tabbar-item to="/main/search" class="tabbar__text">
       <van-icon name="search" />搜索
     </van-tabbar-item>
-    <van-tabbar-item to="/mine" class="tabbar__text">
+    <van-tabbar-item to="/main/mine" class="tabbar__text">
       <van-icon name="contact" />我的
     </van-tabbar-item>
   </van-tabbar>
 </template>
 <script>
 import Vue from "vue";
+import store from "../store";
 import { Tabbar, TabbarItem, Icon } from "vant";
 Vue.use(Tabbar)
   .use(TabbarItem)
@@ -20,7 +21,7 @@ Vue.use(Tabbar)
 export default {
   data() {
     return {
-      active: 0
+      active: store.getPage()
     };
   }
 };

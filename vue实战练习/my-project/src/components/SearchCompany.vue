@@ -1,39 +1,39 @@
 <template name="component-name">
   <div>
     <div id="content" v-if="search">
-      <Header left="none" right="none">拉勾网</Header>
       <div class="linputer">
+        <!-- 城市名 -->
         <div class="lbutton" @click="goCitys">
           <span class="city">全国</span>
           <span class="cityicon"></span>
         </div>
         <div class="rinput">
-          <input class="inputer" type="text" placeholder="搜索职位或公司" />
-          <span class="search">
+          <input class="inputer" type="text" placeholder="搜索职位或公司" v-model="value" />
+          <!-- 搜索 -->
+          <span class="search" @click="searchValue">
             <em class="searchicon"></em>
           </span>
         </div>
       </div>
       <div class="listcon">
-        <ul class="history">
+        <ul class="history" v-if="history">
+          <!-- 历史查询 -->
           <li class="history-item">
-            <span class="text">哈哈哈</span>
-            <div class="delcon">
+            <span class="text" v-text="this.hCity"></span>
+            <div class="delcon" @click="historyDle">
               <span class="delicon"></span>
             </div>
           </li>
         </ul>
-        <div class="custominfo" v-if="1">将搜索地区和关键词设为定制条件</div>
+        <div class="custominfo" v-if="custominfo">将搜索地区和关键词设为定制条件</div>
       </div>
     </div>
 
     <div v-if="cityshow">
-      <header id="header">
-        <div class="left" @click="goSearch">
-          <span class="corner"></span>
-        </div>拉勾网
-      </header>
-      <van-index-bar :index-list="indexList">
+      <div class="goSearch" @click="goSearch">
+        <span class="corner"></span>
+      </div>
+      <van-index-bar>
         <van-index-anchor index="1">热门城市</van-index-anchor>
         <van-cell title="文本" />
         <van-cell title="文本" />
@@ -51,16 +51,26 @@
 import Vue from "vue";
 import { IndexBar, IndexAnchor } from "vant";
 Vue.use(IndexBar).use(IndexAnchor);
-import Header from "./Header";
 export default {
   data() {
     return {
-      indexList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       search: true,
-      cityshow: false
+      cityshow: false,
+      history: false,
+      custominfo: false,
+      value: "",
+      hCity: "前端"
     };
   },
+  created() {},
   methods: {
+    a() {
+      if (this.hCity) {
+        this.history = true;
+      } else {
+        this.history = false;
+      }
+    },
     goCitys() {
       this.cityshow = true;
       this.search = false;
@@ -68,11 +78,18 @@ export default {
     goSearch() {
       this.search = true;
       this.cityshow = false;
+    },
+    searchValue() {
+      this.hCity = this.value;
+      this.a();
+    },
+    historyDle() {
+      this.hCity = "";
+      this.a();
     }
   },
-  components: {
-    Header
-  }
+  components: {},
+  watch: {}
 };
 </script>
 <style lang="scss" scoped>
@@ -183,32 +200,24 @@ export default {
     }
   }
 }
-#header {
-  height: 45px;
-  line-height: 45px;
-  background-color: #00b38a;
-  color: #fff;
-  font-size: 1.8rem;
-  text-align: center;
-  position: relative;
-  .left {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 40px;
-    &:active {
-      background-color: #f0f0f0;
-    }
-    .corner {
-      float: left;
-      width: 9px;
-      height: 20px;
-      margin: 13px;
-      background: url(//www.lgstatic.com/images/mobile/asset/common/img/icon2.png)
-        no-repeat -1.5px -20.5px;
-      background-size: 250px 250px;
-    }
+
+.goSearch {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 40px;
+  &:active {
+    background-color: #f0f0f0;
+  }
+  .corner {
+    float: left;
+    width: 9px;
+    height: 20px;
+    margin: 13px;
+    background: url(//www.lgstatic.com/images/mobile/asset/common/img/icon2.png)
+      no-repeat -1.5px -20.5px;
+    background-size: 250px 250px;
   }
 }
 </style>

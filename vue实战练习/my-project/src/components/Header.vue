@@ -4,7 +4,7 @@
     <div class="left" @click="goback" :style="{display:left?left:'block'}">
       <span class="corner"></span>
     </div>
-    <div class="right" :style="{display:right?right:'block'}">
+    <div class="right" @click="gohome" :style="{display:right?right:'block'}">
       <span class="corner"></span>
     </div>
   </header>
@@ -15,6 +15,11 @@ export default {
   methods: {
     goback() {
       window.history.go(-1);
+    },
+    gohome() {
+      this.$router.push({
+        name: "home"
+      });
     }
   }
 };

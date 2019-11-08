@@ -1,23 +1,24 @@
 <template name="component-name">
   <div>
-    <Header left="none" right="none">拉勾网</Header>
-    <GoGegister />
+    <ToLogin />
     <Card />
     <Footer />
   </div>
 </template>
 <script>
-import Header from "../components/Header.vue";
-import GoGegister from "../components/GoGegister.vue";
+import store from "../store";
+import ToLogin from "../components/ToLogin.vue";
 import Card from "../components/Card.vue";
 import Footer from "../components/Footer.vue";
 export default {
   data() {
     return {};
   },
+  created() {
+    store.setPage(0);
+  },
   components: {
-    Header,
-    GoGegister,
+    ToLogin,
     Card,
     Footer
   }

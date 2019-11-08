@@ -2,7 +2,7 @@
   <div>
     <div id="content">
       <div class="postitle">
-        <h2 class="title">iOS 开发工程师</h2>
+        <h2 class="title">{{this.positionId}}</h2>
         <div class="collicon activeable">
           <span class="icon notcoll"></span>
           <span class="text">未收藏</span>
@@ -88,7 +88,9 @@
             <span>0</span>)
           </span>
         </div>
-        <ul class="list"></ul>
+        <ul class="list">
+          <li class="list-item" v-if="0"></li>
+        </ul>
         <a class="eval-all" href="/user/expsList_6502497.html"></a>
       </div>
       <div class="fix_btn_group">
@@ -103,7 +105,14 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      companyId: 0,
+      positionId: 0
+    };
+  }
+};
 </script>
 <style lang="scss" scoped>
 #content {
