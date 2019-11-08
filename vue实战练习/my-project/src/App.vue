@@ -8,7 +8,6 @@
 <script>
 require("./assets/css/style.css");
 export default {
-  name: "app",
-  components: {}
+  name: "app"
 };
 </script>
