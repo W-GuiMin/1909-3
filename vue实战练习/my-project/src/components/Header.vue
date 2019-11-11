@@ -26,18 +26,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 #header {
+  width: 100%;
   height: 45px;
   line-height: 45px;
   background-color: #00b38a;
   color: #fff;
   font-size: 1.8rem;
   text-align: center;
-  position: relative;
   .left {
     position: absolute;
     left: 0;
     top: 0;
-    height: 100%;
+    height: 45px;
     width: 40px;
     &:active {
       background-color: #f0f0f0;

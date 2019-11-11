@@ -30,14 +30,6 @@ export default {
   },
   components: {
     Verify
-  },
-  mounted: () => {
-    // const a = document.getElementsByClassName("signin_type_btn");
-    // a.array.forEach(element => {
-    //   window.console.log(element.innerThml);
-    // });
-    // var a = this.$el.querySelector("signin_type_btn");
-    // window.console.log(a);
   }
 };
 </script>

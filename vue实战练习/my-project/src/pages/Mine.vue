@@ -1,8 +1,16 @@
 <template name="component-name">
   <div id="content">
     <div class="logininfo">
+      <!-- 登陆状态 -->
+      <div class="haslogin center" v-if="ustate" ref="usta">
+        <a class="button">简历&gt;</a>
+        <div class="headcon">
+          <img class="headpic" src="//www.lgstatic.com/common/image/pc/default_girl_headpic2.png" />
+        </div>
+        <div class="name">{{ustate}}</div>
+      </div>
       <!-- 未登录 -->
-      <div class="nologin center">
+      <div class="nologin center" v-if="operation">
         <a class="loginbut" @click="toRegister">登录 / 注册</a>
       </div>
     </div>
@@ -14,25 +22,58 @@
       <router-link :to="{ name: 'invite'}" class="button invitation">邀约</router-link>
       <router-link :to="{ name: 'enshrine'}" class="button collect">收藏</router-link>
     </div>
+    <a class="logout" v-if="ustate" ref="abtn" @click="btn">退出登录</a>
   </div>
 </template>
 <script>
 import Vue from "vue";
 import { Tabbar, TabbarItem } from "vant";
 Vue.use(Tabbar).use(TabbarItem);
-import store from "../store";
 export default {
+  data() {
+    return {
+      operation: true
+    };
+  },
   created() {
-    store.setPage(2);
+    this.$store.dispatch("setTabbar", 2);
   },
   methods: {
     toRegister() {
       this.$router.push({
         name: "login"
       });
+    },
+    btn() {
+      sessionStorage.removeItem("uid");
+      this.$refs.usta.style.display = "none";
+      this.$refs.abtn.style.display = "none";
+      this.operation = true;
+    },
+    user() {
+      if (window.sessionStorage.getItem("uid")) {
+        this.operation = false;
+      } else {
+        this.operation = true;
+      }
     }
   },
-  components: {}
+  computed: {
+    ustate() {
+      return window.sessionStorage.getItem("uid");
+    }
+  },
+  watch: {
+    ustate: {
+      handler() {
+        if (window.sessionStorage.getItem("uid")) {
+          this.operation = false;
+        } else {
+          this.operation = true;
+        }
+      }
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -45,6 +86,40 @@ export default {
       text-align: center;
       width: 125px;
       margin: 0 auto;
+    }
+    .haslogin {
+      position: relative;
+      width: 100%;
+      top: 10px;
+      height: 111px;
+      .button {
+        position: absolute;
+        color: #00b38a;
+        font-size: 1.4rem;
+        right: 0;
+      }
+      .headcon {
+        height: 81px;
+        width: 81px;
+        margin: 0 auto;
+        border-radius: 40.5px;
+        background-clip: padding-box;
+        overflow: hidden;
+        background-color: #f6f6f6;
+        .headpic {
+          width: 72px;
+          height: 72px;
+          margin: 4px 0 0 1px;
+          border-radius: 36px;
+          background-clip: padding-box;
+        }
+      }
+      .name {
+        font-size: 1.4rem;
+        color: #333333;
+        height: 22px;
+        line-height: 22px;
+      }
     }
     .nologin {
       height: 111px;
@@ -64,6 +139,7 @@ export default {
     }
   }
   .buttons {
+    height: 192px;
     margin-bottom: 10px;
     .button {
       display: block;
@@ -85,6 +161,17 @@ export default {
     .button.collect {
       float: right;
     }
+  }
+  .logout {
+    display: block;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background-color: #1fc8a1;
+    color: #fff;
+    font-size: 1.6rem;
+    margin-bottom: 10px;
   }
 }
 </style>

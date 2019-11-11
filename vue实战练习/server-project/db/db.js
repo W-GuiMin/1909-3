@@ -23,7 +23,12 @@ const find = (col, query) => {
         client.close();
     })
 }
-//插入操作
+
+
+// db.getCollection('news').find({'content':/^.*120.77.215.34:9999.*$/})
+
+
+//插入操作 多条[{"b": 3}, {'c': 4}]
 const insert = (col, query) => {
     return new Promise(async (resolve, reject) => {
         let client = await connect();

@@ -1,22 +1,32 @@
 <template name="component-name">
   <div>
-    <SearchCompany />
+    <!-- <Citys /> -->
+    <component :is="show"></component>
   </div>
 </template>
 <script>
-import store from "../store";
 import SearchCompany from "../components/SearchCompany.vue";
+import Citys from "../components/Citys.vue";
 export default {
   data() {
-    return {};
+    return {
+      show: "SearchCompany"
+    };
   },
   created() {
-    store.setPage(1);
+    this.$store.dispatch("setTabbar", 1);
   },
+  methods: {},
   components: {
-    SearchCompany
+    SearchCompany,
+    Citys
   }
 };
 </script>
 <style lang="scss" scoped>
+/deep/.tab {
+  position: fixed;
+  bottom: 0;
+  z-index: 200;
+}
 </style>

@@ -1,6 +1,6 @@
 <template name="component-name">
   <div class="container">
-    <Verify title="注册拉钩" head="登录" footer="true" btn="注册" />
+    <Verify title="注册拉勾" head="登录" footer="true" btn="注册" input1="手机号码或邮箱" input2="输入密码" />
   </div>
 </template>
 <script>

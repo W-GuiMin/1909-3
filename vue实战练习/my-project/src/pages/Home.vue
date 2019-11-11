@@ -6,7 +6,6 @@
   </div>
 </template>
 <script>
-import store from "../store";
 import ToLogin from "../components/ToLogin.vue";
 import Card from "../components/Card.vue";
 import Footer from "../components/Footer.vue";
@@ -15,7 +14,7 @@ export default {
     return {};
   },
   created() {
-    store.setPage(0);
+    this.$store.dispatch("setTabbar", 0);
   },
   components: {
     ToLogin,

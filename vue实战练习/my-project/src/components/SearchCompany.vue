@@ -1,95 +1,122 @@
 <template name="component-name">
   <div>
-    <div id="content" v-if="search">
+    <div id="content">
       <div class="linputer">
         <!-- 城市名 -->
-        <div class="lbutton" @click="goCitys">
-          <span class="city">全国</span>
+        <div class="lbutton" @click="toCity">
+          <span class="city">{{SearchCity}}</span>
           <span class="cityicon"></span>
         </div>
         <div class="rinput">
           <input class="inputer" type="text" placeholder="搜索职位或公司" v-model="value" />
           <!-- 搜索 -->
-          <span class="search" @click="searchValue">
+          <span class="search" @click="searchValue(value)">
             <em class="searchicon"></em>
           </span>
         </div>
       </div>
       <div class="listcon">
-        <ul class="history" v-if="history">
-          <!-- 历史查询 -->
-          <li class="history-item">
-            <span class="text" v-text="this.hCity"></span>
-            <div class="delcon" @click="historyDle">
-              <span class="delicon"></span>
+        <ul class="history" ref="history">
+          <!--历史记录-->
+          <li class="activeable history-item" v-if="SearchText" ref="history">
+            <span class="text">{{SearchText}}</span>
+            <div class="delcon">
+              <span class="delicon" @click="clear"></span>
             </div>
           </li>
         </ul>
+        <!--查询成功-->
         <div class="custominfo" v-if="custominfo">将搜索地区和关键词设为定制条件</div>
+        <!-- 没有符合条件 -->
+        <ul class="list" v-if="list">
+          <li class="list-empty">
+            <span class="icon"></span>
+            <span class="text">拉勾上暂时没有这样的职位</span>
+          </li>
+        </ul>
+        <van-card
+          class="post"
+          v-for="(c,index) in searchData"
+          :key="index"
+          currency
+          :num="c.salary"
+          :price="c.createTime"
+          :desc="c.positionName+'['+c.city+']'"
+          :title="c.companyName"
+          :thumb="c.companyLogo"
+          @click="searchToDetails(index)"
+          v-model="c.positionId"
+        />
       </div>
-    </div>
-
-    <div v-if="cityshow">
-      <div class="goSearch" @click="goSearch">
-        <span class="corner"></span>
-      </div>
-      <van-index-bar>
-        <van-index-anchor index="1">热门城市</van-index-anchor>
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-
-        <van-index-anchor index="2">标题2</van-index-anchor>
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />...
-      </van-index-bar>
     </div>
   </div>
 </template>
 <script>
 import Vue from "vue";
-import { IndexBar, IndexAnchor } from "vant";
-Vue.use(IndexBar).use(IndexAnchor);
+import { Card } from "vant";
+Vue.use(Card);
 export default {
   data() {
     return {
-      search: true,
-      cityshow: false,
-      history: false,
       custominfo: false,
+      list: false,
       value: "",
-      hCity: "前端"
+      positionId: 0,
+      companyId: 0,
+      searchData: []
     };
   },
-  created() {},
   methods: {
-    a() {
-      if (this.hCity) {
-        this.history = true;
-      } else {
-        this.history = false;
+    toCity() {
+      this.$parent.show = "Citys";
+    },
+    searchValue(value) {
+      if (value) {
+        this.$store.dispatch("setSearchText", value);
+        this.$refs.history.style.display = "none";
+        this.$axios
+          .get("http://localhost:3000/searchdata", {
+            params: { City: this.SearchCity, Name: this.SearchText }
+          })
+          .then(({ data }) => {
+            this.searchData = data;
+          });
       }
     },
-    goCitys() {
-      this.cityshow = true;
-      this.search = false;
+    clear() {
+      this.$store.dispatch("setSearchText", "");
     },
-    goSearch() {
-      this.search = true;
-      this.cityshow = false;
-    },
-    searchValue() {
-      this.hCity = this.value;
-      this.a();
-    },
-    historyDle() {
-      this.hCity = "";
-      this.a();
+    searchToDetails(index) {
+      this.positionId = this.searchData[index].positionId;
+      this.companyId = this.searchData[index].companyId;
+      this.$router.push({
+        name: "details",
+        params: { positionId: this.positionId, companyId: this.companyId }
+      });
     }
   },
-  components: {},
-  watch: {}
+  computed: {
+    SearchCity() {
+      return this.$store.getters.getSearchCity;
+    },
+    SearchText() {
+      return this.$store.getters.getSearchText;
+    }
+  },
+  watch: {
+    searchData: {
+      handler() {
+        if (this.searchData.length) {
+          this.$refs.history.style.display = "none";
+          this.custominfo = true;
+          this.list = false;
+        } else {
+          this.custominfo = false;
+          this.list = true;
+        }
+      }
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -142,14 +169,21 @@ export default {
         line-height: 45px;
         float: right;
         position: relative;
+        &:active {
+          background-color: #f0f0f0;
+        }
         .searchicon {
           display: block;
           margin: 14px auto 0 auto;
           width: 17px;
           height: 17px;
           background: url(//www.lgstatic.com/images/mobile/asset/common/img/icon.png)
-            no-repeat -14px -2.5px;
+            no-repeat;
+          background-position: -14px -2.5px;
           background-size: 250px 250px;
+          &:active {
+            background-position: -14px -20.5px;
+          }
         }
       }
     }
@@ -198,26 +232,92 @@ export default {
       margin-top: 16px;
       margin-bottom: 14px;
     }
-  }
-}
-
-.goSearch {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 40px;
-  &:active {
-    background-color: #f0f0f0;
-  }
-  .corner {
-    float: left;
-    width: 9px;
-    height: 20px;
-    margin: 13px;
-    background: url(//www.lgstatic.com/images/mobile/asset/common/img/icon2.png)
-      no-repeat -1.5px -20.5px;
-    background-size: 250px 250px;
+    .list {
+      .list-empty {
+        text-align: center;
+        font-size: 1.5rem;
+        margin-top: 30px;
+        color: #c2cfcc;
+        .icon {
+          width: 20px;
+          height: 20px;
+          background: url(//www.lgstatic.com/images/mobile/asset/common/img/icon.png)
+            no-repeat -70px -18.5px;
+          background-size: 250px 250px;
+          display: inline-block;
+          vertical-align: middle;
+        }
+        .text {
+          display: inline-block;
+          vertical-align: middle;
+        }
+      }
+    }
+    .van-card {
+      padding: 14px;
+      border-bottom: 1px solid #e8e8e8;
+      background-color: #fff;
+      font-size: 65.5%;
+      color: #333;
+      &:not(:first-child) {
+        margin-top: 0px;
+      }
+      .van-card__thumb {
+        display: inline-block;
+        float: left;
+        width: 60px;
+        height: 60px;
+        margin-right: 10px;
+      }
+      .van-card__content {
+        height: 62px;
+        color: #333;
+        min-height: 0px;
+        .van-card__title {
+          display: block;
+          font-size: 1.6rem;
+          margin-bottom: 6px;
+          width: 80%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-weight: bold;
+        }
+        .van-card__desc {
+          font-size: 1.2rem;
+          float: left;
+          width: 60%;
+          display: inline-block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          color: #333;
+        }
+        .van-card__bottom {
+          .van-card__price {
+            font-size: 1rem;
+            color: #888;
+          }
+          .van-card__num {
+            font-size: 1.6rem;
+            color: #00b38a;
+            float: right;
+            line-height: 15px;
+            float: right;
+            margin-top: -17px;
+            position: relative;
+            &::before {
+              content: " ";
+              position: absolute;
+              display: block;
+              width: 8px;
+              height: 13px;
+              background: #fff;
+            }
+          }
+        }
+      }
+    }
   }
 }
 </style>

@@ -27,10 +27,8 @@
 </template>
 <script>
 import Vue from "vue";
-// import store from "../store";
 import { Card, Button } from "vant";
 Vue.use(Card).use(Button);
-
 export default {
   data() {
     return {

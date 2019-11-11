@@ -2,12 +2,11 @@
   <div>
     <section class="form_container">
       <header class="form_header">
-        <h2 v-text="title?title:'登录拉勾'"></h2>
+        <h2 v-text="title?title:'登录拉勾'" ref="title"></h2>
         <a class="brother_link" v-text="head?head:'注册'" @click="goLogin"></a>
       </header>
       <form class="form_body form_code" method="post">
         <div class="input_label phone_wrapper">
-          <!-- 手机号码和城市 -->
           <span class="area_code" v-if="phone?0:1">0086</span>
           <div class="area_code_list" v-if="phone?0:1">
             <dl class="code_list_main">
@@ -56,8 +55,8 @@
               <a href="tel:4006282835">4006282835</a> 解决。
             </p>
           </div>
-          <!-- ---------------------------------- -->
           <input
+            v-model="value1"
             type="text"
             :placeholder="input1?input1:'请输入常用手机号'"
             class="input_text phone_input"
@@ -66,7 +65,8 @@
         </div>
         <div class="input_label">
           <input
-            type="text"
+            v-model="value2"
+            type="password"
             class="input_text vcode_input"
             :placeholder="input2?input2:'请输入收到的验证码'"
           />
@@ -80,7 +80,7 @@
         </div>
 
         <div class="input_label btn_group">
-          <input type="button" class="submit_btn" :value="btn" />
+          <input type="button" class="submit_btn" :value="btn" @click="abtn" />
         </div>
         <div class="register_agreement" v-if="footer?footer:0">
           注册拉勾代表你已同意
@@ -96,6 +96,7 @@
 <script>
 import Vue from "vue";
 import { Toast } from "vant";
+import router from "../routers";
 Vue.use(Toast);
 export default {
   props: [
@@ -109,6 +110,13 @@ export default {
     "input1",
     "input2"
   ],
+  data() {
+    return {
+      value1: "",
+      value2: "",
+      user: []
+    };
+  },
   methods: {
     goLogin() {
       //登录注册也切换
@@ -132,6 +140,80 @@ export default {
       if (this.$refs.btn.innerText == "手机号登录") {
         this.$parent.numShow = false;
         this.$parent.phoneShow = true;
+      }
+    },
+    abtn() {
+      // 正则
+      let reg1 = /^1[3-9]\d{9}$/;
+      let reg2 = /^([0-9A-Za-z\-_.]+)@([0-9a-z]+.[a-z]{2,3}(.[a-z]{2})?)$/;
+      // 判断输入框非空
+      if (this.value1 && this.value2) {
+        //登录功能
+        if (this.$refs.title.innerText === "登录拉勾") {
+          // 判断是否有用户登录
+          if (window.sessionStorage.getItem("uid")) {
+            this.$toast("已有用户登录，继续登录请退出");
+          } else {
+            //正则验证
+            if (reg1.test(this.value1) || reg2.test(this.value1)) {
+              // 发送请求验证用户名是否已验证
+              this.$axios
+                .get("http://localhost:3000/login", {
+                  params: { userName: this.value1 }
+                })
+                .then(({ data }) => {
+                  this.user = data;
+                  //已验证
+                  if (this.user.length) {
+                    //判断密码是否正确，正确则把用户名存到sessionStorage里，跳转到主页
+                    if (this.user[0].password === this.value2) {
+                      sessionStorage.setItem("uid", this.value1);
+                      router.push({
+                        name: "mine"
+                      });
+                      (this.value1 = ""), (this.value2 = "");
+                    } else {
+                      this.$toast("密码错误，请重新输入");
+                      this.value2 = "";
+                    }
+                  } else {
+                    this.$toast("该用户未注册");
+                    window.console.log(this.user.length);
+                  }
+                });
+            } else {
+              this.$toast("手机或邮箱格式不正确");
+            }
+          }
+        }
+        // 注册功能
+        if (this.$refs.title.innerText === "注册拉勾") {
+          //正则验证
+          if (reg1.test(this.value1) || reg2.test(this.value1)) {
+            // 发送请求判断用户名是否验证
+            this.$axios
+              .get("http://localhost:3000/login", {
+                params: { userName: this.value1 }
+              })
+              .then(({ data }) => {
+                this.user = data;
+                //返回记录表示已被注册，则不能进行注册
+                if (this.user.length) {
+                  this.$toast("该用户已被注册");
+                } else {
+                  //没有记录则进行插入操作
+                  this.$axios.get("http://localhost:3000/register", {
+                    params: { userName: this.value1, password: this.value2 }
+                  });
+                  this.$toast("注册成功");
+                }
+              });
+          } else {
+            this.$toast("手机或邮箱格式不正确");
+          }
+        }
+      } else {
+        this.$toast("请填写完整信息");
       }
     }
   }
