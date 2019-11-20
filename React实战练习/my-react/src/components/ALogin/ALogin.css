@@ -1,0 +1,36 @@
+.demo-ruleForm {
+  width: 50%;
+  height: 400px;
+  position: absolute;
+  padding: 50px 50px 70px 50px;
+  top: -11%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  background: rgba(255, 255, 255, 0.4);
+}
+.demo-ruleForm .title {
+  font-size: 20px;
+}
+.demo-ruleForm .el-form-item {
+  width: 80%;
+  padding-left: 10%;
+  margin-bottom: 35px;
+}
+.demo-ruleForm .el-button--primary {
+  color: #fff;
+  background-color: #c6556a;
+  border-color: #b92e48;
+}
+.demo-ruleForm .el-button--primary:hover {
+  background-color: #b92e48;
+}
+.demo-ruleForm .el-button.el-button--default {
+  color: #000;
+  border-color: #fff;
+}
+.demo-ruleForm .el-button.el-button--default:hover {
+  color: #b92e48;
+  border-color: #b92e48;
+}

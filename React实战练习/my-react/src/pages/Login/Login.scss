@@ -1,0 +1,18 @@
+.ant-layout {
+    height: 100%;
+
+    .ant-layout-header {
+        font-size: 20px;
+        color: rgb(245, 204, 204);
+        background: #c53c56;
+    }
+
+    .ant-layout-content {
+        background: url(../../asstes/bg_1.jpg) no-repeat center center;
+        background-size: 100% 100%;
+    }
+
+    .ant-layout-footer {
+        text-align: center;
+    }
+}
