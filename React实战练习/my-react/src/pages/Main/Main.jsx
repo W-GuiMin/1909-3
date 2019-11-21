@@ -22,8 +22,41 @@ import { Layout, Menu, Breadcrumb, Icon } from 'antd';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
-
+const router2 = [{
+    path: '/main',
+    component: <AMain />
+}, {
+    path: '/shop',
+    component: <Shop />
+}, {
+    path: '/client',
+    component: <Client />
+}, {
+    path: '/add',
+    component: <Add />
+}, {
+    path: '/update',
+    component: <Update />
+}, {
+    path: '/delete',
+    component: <Delete />
+}, {
+    path: '/order',
+    component: <Order />
+}, {
+    path: '/pjysical',
+    component: <Physical />
+}, {
+    path: '/sales',
+    component: <Sales />
+}, {
+    path: '/exchange',
+    component: <Exchange />
+}]
 export default class Main extends React.Component {
+    constructor(props) {
+        super(props);
+    }
     state = {
         collapsed: false,
     };
@@ -33,6 +66,10 @@ export default class Main extends React.Component {
         this.setState({ collapsed });
     };
 
+    clear() {
+        window.sessionStorage.removeItem('adminName')
+        this.props.history.push('/login')
+    }
     render() {
         return (
             <>
@@ -98,16 +135,15 @@ export default class Main extends React.Component {
                                     <Menu.Item key="9"><Link to="sales">退货信息</Link></Menu.Item>
                                     <Menu.Item key="10"><Link to="exchange">换货信息</Link></Menu.Item>
                                 </SubMenu>
-                                {/* <Menu.Item key="11">
-                                    <Link to="earnings">
-                                        <Icon type="dollar" />
-                                        <span>收益统计</span>
-                                    </Link>
-                                </Menu.Item> */}
                             </Menu>
                         </Sider>
                         <Layout>
-                            <Header style={{ background: '#c53c56', color: '#fff', fontSize: '20px' }} >  家有购物后台管理系统</Header>
+                            <Header style={{ background: '#c53c56', color: '#fff', fontSize: '20px' }} >  家有购物后台管理系统
+                                <div className="admin">
+                                    {window.sessionStorage.getItem('adminName')}
+                                    <span onClick={this.clear.bind(this)}>退出</span>
+                                </div>
+                            </Header>
                             <Content style={{ margin: '0 16px' }}>
                                 <Breadcrumb style={{ margin: '16px 0' }}>
                                     <Breadcrumb.Item>User</Breadcrumb.Item>
@@ -116,39 +152,11 @@ export default class Main extends React.Component {
                                 <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
 
                                     <Switch>
-                                        <Route path='/main'>
-                                            <AMain />
-                                        </Route>
-                                        <Route path='/shop'>
-                                            <Shop />
-                                        </Route>
-                                        <Route path='/client'>
-                                            <Client />
-                                        </Route>
-                                        <Route path='/update'>
-                                            <Update />
-                                        </Route>
-                                        <Route path='/add'>
-                                            <Add />
-                                        </Route>
-                                        <Route path='/delete'>
-                                            <Delete />
-                                        </Route>
-                                        <Route path='/order'>
-                                            <Order />
-                                        </Route>
-                                        <Route path='/physical'>
-                                            <Physical />
-                                        </Route>
-                                        <Route path='/sales'>
-                                            <Sales />
-                                        </Route>
-                                        <Route path='/exchange'>
-                                            <Exchange />
-                                        </Route>
-                                        {/* <Route path='/earnings'>
-                                            <Earnings />
-                                        </Route> */}
+                                        {router2.map((item, index) => {
+                                            return <Route key={index} path={item.path} >
+                                                {item.component}
+                                            </Route>
+                                        })}
                                     </Switch>
 
                                 </div>

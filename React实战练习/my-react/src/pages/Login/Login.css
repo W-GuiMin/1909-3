@@ -6,10 +6,6 @@
   color: #f5cccc;
   background: #c53c56;
 }
-.ant-layout .ant-layout-content {
-  background: url(../../asstes/bg_1.jpg) no-repeat center center;
-  background-size: 100% 100%;
-}
 .ant-layout .ant-layout-footer {
   text-align: center;
 }

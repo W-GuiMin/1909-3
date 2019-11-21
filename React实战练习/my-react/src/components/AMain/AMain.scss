@@ -1,0 +1,27 @@
+.amain {
+    padding: 100px 10px 0px 0px;
+
+    h2 {
+        margin-top: -100px;
+    }
+
+    &:after {
+        content: " ";
+        clear: both;
+        height: 0;
+        overflow: hidden;
+        visibility: hidden;
+        display: block;
+    }
+
+    .left {
+        width: 40%;
+        float: left;
+    }
+
+    .right {
+        width: 40%;
+        float: left;
+        margin-left: 15%;
+    }
+}
