@@ -1,6 +1,7 @@
 import React from 'react'
+import './Shop.css'
 import { Button, Form, Input, Layout, DatePicker, Checkbox, Switch, Select, TimePicker, Radio } from 'element-react';
-export default class Add extends React.Component {
+export default class UpdateShop extends React.Component {
     constructor(props) {
         super(props);
 
@@ -94,3 +95,4 @@ export default class Add extends React.Component {
         )
     }
 }
+

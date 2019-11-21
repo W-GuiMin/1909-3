@@ -13,11 +13,9 @@ import Client from '../../components/Client/Client'
 import Add from '../../components/Add/Add'
 import Update from '../../components/Update/Update'
 import Delete from '../../components/Delete/Delete'
-import Order from '../../components/Order/Order'
 import Physical from '../../components/Physical/Physical'
 import Sales from '../../components/Sales/Sales'
 import Exchange from '../../components/Exchange/Exchange'
-// import Earnings from '../../components/Earnings/Earnings'
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -40,9 +38,6 @@ const router2 = [{
 }, {
     path: '/delete',
     component: <Delete />
-}, {
-    path: '/order',
-    component: <Order />
 }, {
     path: '/pjysical',
     component: <Physical />
@@ -89,13 +84,13 @@ export default class Main extends React.Component {
                                 <Menu.Item key="2">
                                     <Link to="/shop">
                                         <Icon type="shop" />
-                                        <span>店铺信息管理</span>
+                                        <span>店铺信息</span>
                                     </Link>
                                 </Menu.Item>
                                 <Menu.Item key="3">
                                     <Link to="/client">
                                         <Icon type="user" />
-                                        <span>客户信息管理</span>
+                                        <span>客户订单</span>
                                     </Link>
                                 </Menu.Item>
                                 <SubMenu
@@ -107,16 +102,10 @@ export default class Main extends React.Component {
                                         </span>
                                     }
                                 >
-                                    <Menu.Item key="4"><Link to="/add">上新产品信息</Link></Menu.Item>
+                                    <Menu.Item key="4"><Link to="/add">产品上新</Link></Menu.Item>
                                     <Menu.Item key="5"><Link to="/update">修改产品信息</Link></Menu.Item>
                                     <Menu.Item key="6"><Link to="/delete">删除产品信息</Link></Menu.Item>
                                 </SubMenu>
-                                <Menu.Item key="7">
-                                    <Link to="/order">
-                                        <Icon type="profile" />
-                                        <span>订单管理</span>
-                                    </Link>
-                                </Menu.Item>
                                 <Menu.Item key="8">
                                     <Link to="physical">
                                         <Icon type="car" />
