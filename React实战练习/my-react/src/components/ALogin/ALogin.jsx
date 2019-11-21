@@ -49,12 +49,10 @@ export default class ALogin extends React.Component {
             }
         };
     }
-
     handleSubmit(e) {
         e.preventDefault();
         this.refs.form.validate((valid) => {
             if (valid) {
-
                 axios.get('http://localhost:3030/loginname', {
                     params: {
                         adminName: this.state.form.admin

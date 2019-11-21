@@ -67,7 +67,7 @@ export default class Main extends React.Component {
     };
 
     clear() {
-        window.sessionStorage.removeItem('adminName')
+        window.sessionStorage.clear()
         this.props.history.push('/login')
     }
     render() {

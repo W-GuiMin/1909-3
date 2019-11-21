@@ -1,5 +1,6 @@
 import React from 'react'
 import './AMain.css'
+import axios from 'axios'
 import {
     Chart,
     Geom,
@@ -14,31 +15,38 @@ import DataSet from "@antv/data-set";
 export default class AMain extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            data: []
+        }
+    }
+    componentDidMount() {
+        let shopData = window.sessionStorage.getItem('shopData');
+        if (!shopData) {
+            this.createData()
+        } else {
+            this.setState({
+                data: JSON.parse(window.sessionStorage.getItem('shopData'))
+            })
+        }
+    }
+    async createData() {
+        await axios.get('http://localhost:3030/shop', {
+            params: {
+                adminName: window.sessionStorage.getItem('adminName')
+            }
+        }).then(({ data }) => {
+            this.setState({
+                data: data
+            })
+            window.sessionStorage.setItem('shopData', JSON.stringify(data))
+        })
     }
     render() {
         const { DataView } = DataSet;
-        const data = [
-            {
-                item: "服饰",
-                count: 40
-            },
-            {
-                item: "床上用品",
-                count: 21
-            },
-            {
-                item: "其他",
-                count: 17
-            },
-            {
-                item: "家用电器",
-                count: 13
-            },
-            {
-                item: "厨房用具",
-                count: 9
-            }
-        ];
+
+        const data = this.state.data.map((item, index) => {
+            return { item: item.kind, count: (item.out / item.store) }
+        })
         const dv = new DataView();
         dv.source(data).transform({
             type: "percent",
@@ -49,19 +57,22 @@ export default class AMain extends React.Component {
         const cols = {
             percent: {
                 formatter: val => {
-                    val = val * 100 + "%";
+                    val = Math.floor(val * 100) + "%";
                     return val;
                 }
             }
         };
         // 数据源
-        const data1 = [
-            { genre: '床上用品', sold: 275, income: 2300 },
-            { genre: '厨房用具', sold: 115, income: 667 },
-            { genre: '家用电器', sold: 120, income: 982 },
-            { genre: '服饰', sold: 350, income: 5271 },
-            { genre: '其他', sold: 150, income: 3710 }
-        ];
+        const data1 = this.state.data.map((item) => {
+            return { genre: item.kind, sold: item.out }
+        })
+        // const data1 = [
+        //     { genre: '床上用品', sold: 275, income: 2300 },
+        //     { genre: '厨房用具', sold: 115, income: 667 },
+        //     { genre: '家用电器', sold: 120, income: 982 },
+        //     { genre: '服饰', sold: 350, income: 5271 },
+        //     { genre: '其他', sold: 150, income: 3710 }
+        // ];
 
         // 定义度量
         const cols1 = {
