@@ -39,7 +39,7 @@ const router2 = [{
     path: '/delete',
     component: <Delete />
 }, {
-    path: '/pjysical',
+    path: '/physical',
     component: <Physical />
 }, {
     path: '/sales',
@@ -49,9 +49,6 @@ const router2 = [{
     component: <Exchange />
 }]
 export default class Main extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     state = {
         collapsed: false,
     };

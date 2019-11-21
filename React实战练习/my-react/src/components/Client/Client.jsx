@@ -12,31 +12,30 @@ export default class Client extends React.Component {
         };
     }
     componentDidMount() {
-       if(window.sessionStorage.getItem('userData')){
-           this.setState({
-               data:JSON.parse(window.sessionStorage.getItem('userData'))
-           })
-       }else{
-        axios.get('http://localhost:3030/users').then(({ data }) => {
-            let Data = data.map((item, index) => {
-                return {
-                    key: index,
-                    id: item.id,
-                    name: item.userName,
-                    commodity: item.commodity,
-                    tel: item.tel,
-                    price: item.price,
-                    address: item.address
-                }
-            })
+        if (window.sessionStorage.getItem('userData')) {
             this.setState({
-                data: Data
+                data: JSON.parse(window.sessionStorage.getItem('userData'))
             })
-            window.sessionStorage.setItem('userData',JSON.stringify(Data))
-        })
-       }
+        } else {
+            axios.get('http://localhost:3030/users').then(({ data }) => {
+                let Data = data.map((item, index) => {
+                    return {
+                        key: index,
+                        id: item.id,
+                        name: item.userName,
+                        commodity: item.commodity,
+                        tel: item.tel,
+                        price: item.price,
+                        address: item.address
+                    }
+                })
+                this.setState({
+                    data: Data
+                })
+                window.sessionStorage.setItem('userData', JSON.stringify(Data))
+            })
+        }
     }
-
     getColumnSearchProps = dataIndex => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <div style={{ padding: 8 }}>
@@ -57,10 +56,10 @@ export default class Client extends React.Component {
                     size="small"
                     style={{ width: 90, marginRight: 8 }}
                 >
-                    Search
+                    搜索
         </Button>
                 <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                    Reset
+                    重置
         </Button>
             </div>
         ),
@@ -134,6 +133,6 @@ export default class Client extends React.Component {
                 ...this.getColumnSearchProps('address'),
             },
         ]
-        return (<Table columns={columns} dataSource={this.state.data} />);
+        return <Table columns={columns} dataSource={this.state.data} />;
     }
 }
