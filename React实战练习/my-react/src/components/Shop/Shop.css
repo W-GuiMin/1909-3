@@ -1,4 +1,25 @@
-.el-form {
+.shopmain {
+  height: 100%;
+}
+.shopmain::after {
+  content: " ";
+  clear: both;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  display: block;
+}
+.shopmain .el-form {
   width: 80%;
   padding: 0px 20% 5% 10%;
+}
+.shopmain .ant-table-wrapper {
+  width: 70%;
+}
+.shopmain .ant-btn-primary {
+  float: right;
+}
+.shopmain .ant-table-wrapper {
+  margin-top: 40px;
+  float: right;
 }

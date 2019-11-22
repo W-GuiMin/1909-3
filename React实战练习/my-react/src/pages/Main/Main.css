@@ -22,6 +22,7 @@
 }
 .ant-layout-content {
   border-radius: 30px;
+  height: 100%;
 }
 a {
   color: rgba(255, 255, 255, 0.65);

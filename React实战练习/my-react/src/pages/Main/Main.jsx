@@ -14,8 +14,6 @@ import Add from '../../components/Add/Add'
 import Update from '../../components/Update/Update'
 import Delete from '../../components/Delete/Delete'
 import Physical from '../../components/Physical/Physical'
-import Sales from '../../components/Sales/Sales'
-import Exchange from '../../components/Exchange/Exchange'
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -41,12 +39,6 @@ const router2 = [{
 }, {
     path: '/physical',
     component: <Physical />
-}, {
-    path: '/sales',
-    component: <Sales />
-}, {
-    path: '/exchange',
-    component: <Exchange />
 }]
 export default class Main extends React.Component {
     state = {
@@ -109,18 +101,6 @@ export default class Main extends React.Component {
                                         <span>物流状态</span>
                                     </Link>
                                 </Menu.Item>
-                                <SubMenu
-                                    key="sub2"
-                                    title={
-                                        <span>
-                                            <Icon type="desktop" />
-                                            <span>售后/退换货</span>
-                                        </span>
-                                    }
-                                >
-                                    <Menu.Item key="9"><Link to="sales">退货信息</Link></Menu.Item>
-                                    <Menu.Item key="10"><Link to="exchange">换货信息</Link></Menu.Item>
-                                </SubMenu>
                             </Menu>
                         </Sider>
                         <Layout>
