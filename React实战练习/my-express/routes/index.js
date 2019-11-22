@@ -19,4 +19,12 @@ router.get('/users', async function (req, res, next) {
   let data = await find('users')
   res.json(data)
 });
+router.get('/shopdata', async function (req, res, next) {
+  res.append('Access-Control-Allow-Origin', '*')
+  // let { name, boss, tel, time, address, youbian, description } = JSON.parse(req.query.shopdata)
+  // let { name, boss, tel, time, address, youbian, description } = JSON.parse(req.query.shopdata)
+  // let { name, boss, tel, time, address, youbian, description } = JSON.parse(req.query.shopdata)
+  // let data = await find('admin', {'adminName':name})
+  // res.json(data)
+});
 module.exports = router;
