@@ -17,7 +17,7 @@ export default class Client extends React.Component {
                 data: JSON.parse(window.sessionStorage.getItem('userData'))
             })
         } else {
-            axios.get('http://localhost:3030/users').then(({ data }) => {
+            axios.get('http://localhost:3030/users', { params: { adminName: window.sessionStorage.getItem('adminName') } }).then(({ data }) => {
                 let Data = data.map((item, index) => {
                     return {
                         key: index,

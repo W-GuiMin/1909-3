@@ -1,67 +1,35 @@
 import React from 'react'
-import Find from '../Find/Find'
-import { Table, Input, Popconfirm, Form } from 'antd';
-
+import axios from 'axios'
+import { Table, Popconfirm, Form } from 'antd';
+//定义子表显示
 const EditableContext = React.createContext();
-
-const EditableRow = ({ form, index, ...props }) => (
+const EditableFormRow = Form.create()(({ form, index, ...props }) => (
     <EditableContext.Provider value={form}>
         <tr {...props} />
     </EditableContext.Provider>
-);
-
-const EditableFormRow = Form.create()(EditableRow);
+));
 
 class EditableCell extends React.Component {
-    state = {
-        editing: false,
-    };
-
-    toggleEdit = () => {
-        const editing = !this.state.editing;
-        this.setState({ editing }, () => {
-            if (editing) {
-                this.input.focus();
-            }
-        });
-    };
-
     save = e => {
         const { record, handleSave } = this.props;
         this.form.validateFields((error, values) => {
             if (error && error[e.currentTarget.id]) {
                 return;
             }
-            this.toggleEdit();
             handleSave({ ...record, ...values });
         });
     };
 
     renderCell = form => {
         this.form = form;
-        const { children, dataIndex, record, title } = this.props;
-        const { editing } = this.state;
-        return editing ? (
-            <Form.Item style={{ margin: 0 }}>
-                {form.getFieldDecorator(dataIndex, {
-                    rules: [
-                        {
-                            required: true,
-                            message: `${title} is required.`,
-                        },
-                    ],
-                    initialValue: record[dataIndex],
-                })(<Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />)}
-            </Form.Item>
-        ) : (
-                <div
-                    className="editable-cell-value-wrap"
-                    style={{ paddingRight: 24 }}
-                    onClick={this.toggleEdit}
-                >
-                    {children}
-                </div>
-            );
+        const { children } = this.props;
+
+        return <div
+            className="editable-cell-value-wrap"
+            style={{ paddingRight: 24 }}
+        >
+            {children}
+        </div>
     };
 
     render() {
@@ -92,40 +60,88 @@ export default class Delete extends React.Component {
         super(props);
         this.columns = [
             {
-                title: 'name',
+                title: '商品名',
                 dataIndex: 'name',
-                width: '30%',
                 editable: true,
             },
             {
-                title: 'id',
-                dataIndex: 'id',
+                title: '商品编号',
+                dataIndex: 'gid',
             },
             {
-                title: 'address',
-                dataIndex: 'address',
+                title: '商品价格',
+                dataIndex: 'price',
             },
             {
-                title: 'operation',
+                title: '发货仓库',
+                dataIndex: 'region',
+            },
+            {
+                title: '优惠',
+                dataIndex: 'type',
+            },
+            {
+                title: '支持付款方式',
+                dataIndex: 'resource',
+            },
+            {
+                title: '操作',
                 dataIndex: 'operation',
                 render: (text, record) =>
                     this.state.dataSource.length >= 1 ? (
-                        <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
-                            <span>Delete</span>
+                        <Popconfirm title="确认删除?" onConfirm={() => this.handleDelete(record.key)}>
+                            <span>删除</span>
                         </Popconfirm>
                     ) : null,
             },
         ];
-
         this.state = {
-            dataSource: JSON.parse(window.sessionStorage.getItem('userData')),
-            count: JSON.parse(window.sessionStorage.getItem('userData')).length,
+            dataSource: [],
+            count: 0,
         };
     }
+    componentDidMount() {
+        if (window.sessionStorage.getItem('commodityData')) {
+            this.setState({
+                dataSource: JSON.parse(window.sessionStorage.getItem('commodityData')),
+                count: JSON.parse(window.sessionStorage.getItem('commodityData')).length
+            })
+        } else {
+            this.initData()
+        }
+    }
+    initData() {
+        axios.get('http://localhost:3030/commodity', { params: { adminName: window.sessionStorage.getItem('adminName') } }).then(({ data }) => {
+            let Data = data.map((item, index) => {
+                return {
+                    key: index,
+                    gid: item.gid,
+                    name: item.commodity.name,
+                    price: item.commodity.price,
+                    region: item.commodity.region,
+                    type: item.commodity.type,
+                    resource: item.commodity.resource,
+                    desc: item.commodity.desc
+                }
+            })
+            console.log(Data)
+            this.setState({
+                data: Data,
+                count: Data.length
+            })
+            window.sessionStorage.setItem('commodityData', JSON.stringify(Data))
+        })
+    }
+
+
 
     handleDelete = key => {
+        console.log(key)
         const dataSource = [...this.state.dataSource];
+        console.log(dataSource[key].gid)
+        axios.get('http://localhost:3030/del', { params: { adminName: window.sessionStorage.getItem('adminName'), gid: dataSource[key].gid } })
         this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
+        window.sessionStorage.setItem('commodityData', JSON.stringify(this.state.dataSource))
     };
 
     handleSave = row => {

@@ -62,6 +62,7 @@ export default class ALogin extends React.Component {
                     if (Data.length) {
                         if (Data[0].password === this.state.form.pass) {
                             window.sessionStorage.setItem('adminName', this.state.form.admin)
+                            window.sessionStorage.setItem('adminData', JSON.stringify(Data[0].shop))
                             this.props.history.push('/main')
                         } else {
                             alert('密码错误!');

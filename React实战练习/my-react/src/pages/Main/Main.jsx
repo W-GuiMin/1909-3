@@ -12,34 +12,37 @@ import Shop from '../../components/Shop/Shop'
 import Client from '../../components/Client/Client'
 import Add from '../../components/Add/Add'
 import Update from '../../components/Update/Update'
+import UpdateShop from '../../components/UpdateShop/UpdateShop'
 import Delete from '../../components/Delete/Delete'
-import Physical from '../../components/Physical/Physical'
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
-const router2 = [{
-    path: '/main',
-    component: <AMain />
-}, {
-    path: '/shop',
-    component: <Shop />
-}, {
-    path: '/client',
-    component: <Client />
-}, {
-    path: '/add',
-    component: <Add />
-}, {
-    path: '/update',
-    component: <Update />
-}, {
-    path: '/delete',
-    component: <Delete />
-}, {
-    path: '/physical',
-    component: <Physical />
-}]
+const router2 = [
+    {
+        path: '/main',
+        component: <AMain />
+    },
+    {
+        path: '/shop',
+        component: <Shop />
+    }, {
+        path: '/client',
+        component: <Client />
+    }, {
+        path: '/add',
+        component: <Add />
+    }, {
+        path: '/update',
+        component: <Update />
+    },
+    {
+        path: '/updateshop',
+        component: <UpdateShop />
+    }, {
+        path: '/delete',
+        component: <Delete />
+    }]
 export default class Main extends React.Component {
     state = {
         collapsed: false,
@@ -95,12 +98,6 @@ export default class Main extends React.Component {
                                     <Menu.Item key="5"><Link to="/update">修改产品信息</Link></Menu.Item>
                                     <Menu.Item key="6"><Link to="/delete">删除产品信息</Link></Menu.Item>
                                 </SubMenu>
-                                <Menu.Item key="8">
-                                    <Link to="physical">
-                                        <Icon type="car" />
-                                        <span>物流状态</span>
-                                    </Link>
-                                </Menu.Item>
                             </Menu>
                         </Sider>
                         <Layout>
@@ -111,10 +108,10 @@ export default class Main extends React.Component {
                                 </div>
                             </Header>
                             <Content style={{ margin: '0 16px' }}>
-                                <Breadcrumb style={{ margin: '16px 0' }}>
+                                {/* <Breadcrumb style={{ margin: '16px 0' }}>
                                     <Breadcrumb.Item>User</Breadcrumb.Item>
                                     <Breadcrumb.Item>Bill</Breadcrumb.Item>
-                                </Breadcrumb>
+                                </Breadcrumb> */}
                                 <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
 
                                     <Switch>

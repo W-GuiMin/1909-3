@@ -28,6 +28,10 @@ export default class AMain extends React.Component {
                 data: JSON.parse(window.sessionStorage.getItem('shopData'))
             })
         }
+        if (!window.sessionStorage.getItem('commodityData')) {
+            this.initData()
+        }
+
     }
     async createData() {
         await axios.get('http://localhost:3030/shop', {
@@ -35,10 +39,28 @@ export default class AMain extends React.Component {
                 adminName: window.sessionStorage.getItem('adminName')
             }
         }).then(({ data }) => {
+            console.log(data[0].shopcontent)
             this.setState({
-                data: data
+                data: data[0].shopcontent
             })
-            window.sessionStorage.setItem('shopData', JSON.stringify(data))
+            window.sessionStorage.setItem('shopData', JSON.stringify(data[0].shopcontent))
+        })
+    }
+    initData() {
+        axios.get('http://localhost:3030/commodity', { params: { adminName: window.sessionStorage.getItem('adminName') } }).then(({ data }) => {
+            let Data = data.map((item, index) => {
+                return {
+                    key: index,
+                    gid: item.gid,
+                    name: item.commodity.name,
+                    price: item.commodity.price,
+                    region: item.commodity.region,
+                    type: item.commodity.type,
+                    resource: item.commodity.resource,
+                    desc: item.commodity.desc
+                }
+            })
+            window.sessionStorage.setItem('commodityData', JSON.stringify(Data))
         })
     }
     render() {

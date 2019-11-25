@@ -5,52 +5,27 @@ import { Button, Modal, Form, Input, Descriptions } from 'antd';
 //getFieldDecorator 用于和表单进行双向绑定，详见下方描述
 class CollectionCreateForm extends React.Component {
     render() {
-        const { visible, onCancel, onCreate, form } = this.props;
+        const { visible, content, onCancel, onCreate, form } = this.props;
         const { getFieldDecorator } = form;
         return (
             <Modal
                 visible={visible}
+                content={content}
                 title="修改店铺信息"
                 okText="确定"
                 onCancel={onCancel}
                 onOk={onCreate}
             >
                 <Form layout="vertical">
-                    <Form.Item label="店铺名称">
-                        {getFieldDecorator('name', {
-                            rules: [{ required: true, whitespace: true, message: '必填!' }],
-                        })(<Input />)}
-                    </Form.Item>
-                    <Form.Item label="店主">
-                        {getFieldDecorator('boss', {
-                            rules: [{ required: true, whitespace: true, message: '必填!' }],
-                        })(<Input />)}
-                    </Form.Item>
-                    <Form.Item label="联系电话">
-                        {getFieldDecorator('tel', {
-                            rules: [{ required: true, whitespace: true, message: '必填!' }],
-                        })(<Input />)}
-                    </Form.Item>
-                    <Form.Item label="营业时间">
-                        {getFieldDecorator('time', {
-                            rules: [{ required: true, whitespace: true, message: '必填!' }],
-                        })(<Input />)}
-                    </Form.Item>
-                    <Form.Item label="店铺地址">
-                        {getFieldDecorator('address', {
-                            rules: [{ required: true, whitespace: true, message: '必填!' }],
-                        })(<Input />)}
-                    </Form.Item>
-                    <Form.Item label="邮编">
-                        {getFieldDecorator('youbian', {
-                            rules: [{ required: true, whitespace: true, message: '必填!' }],
-                        })(<Input />)}
-                    </Form.Item>
-                    <Form.Item label="其他">
-                        {getFieldDecorator('description', {
-                            rules: [{ required: true, whitespace: true, message: '必填!' }],
-                        })(<Input type="textarea" />)}
-                    </Form.Item>
+                    {
+                        content.map((item, index) => {
+                            return <Form.Item key={index} label={item.title}>
+                                {getFieldDecorator(item.titleIndex, {
+                                    rules: [{ required: true, whitespace: true, message: '必填!' }],
+                                })(<Input />)}
+                            </Form.Item>
+                        })
+                    }
                 </Form>
             </Modal>
         );
@@ -62,17 +37,31 @@ export default class Shop extends React.Component {
 
     state = {
         visible: false,
-        Data: {
-            name: "家有惠",
-            boss: "admin",
-            tel: "15986562365",
-            time: "8:00-23:00",
-            address: "广东省广州市天河区",
-            youbian: "540000",
-            description: '专注品牌服饰'
-        }
+        Data: JSON.parse(window.sessionStorage.getItem('adminData')),
+        content: [{
+            title: "店铺名称",
+            titleIndex: 'name'
+        }, {
+            title: "店主",
+            titleIndex: 'boss'
+        }, {
+            title: "联系电话",
+            titleIndex: 'tel'
+        }, {
+            title: "营业时间",
+            titleIndex: 'time'
+        }, {
+            title: "店铺地址",
+            titleIndex: 'address'
+        }, {
+            title: "邮编",
+            titleIndex: 'youbian'
+        }, {
+            title: "其他",
+            titleIndex: 'description'
+        }]
     };
-
+    m
     showModal = () => {
         this.setState({ visible: true });
     };
@@ -93,7 +82,8 @@ export default class Shop extends React.Component {
             this.setState({
                 Data: values
             })
-            axios.get('http://localhost:3000/shopdata', { params: values }).then(({ data }) => {
+            window.sessionStorage.setItem('adminData', JSON.stringify(values))
+            axios.get('http://localhost:3030/shopdata', { params: { values: values, adminName: window.sessionStorage.getItem('adminName') } }).then(({ data }) => {
                 console.log(data)
             })
             form.resetFields();
@@ -112,21 +102,20 @@ export default class Shop extends React.Component {
                 <Descriptions
                     title="店铺信息"
                     bordered
-                    column={{ xxl: 4, xl: 2, lg: 3, md: 3, sm: 2, xs: 1 }}
+                    column={{ xxl: 2, xl: 1, lg: 3, md: 3, sm: 3, xs: 1 }}
                 >
-                    <Descriptions.Item label="店铺名称" >{this.state.Data.name}</Descriptions.Item>
-                    <Descriptions.Item label="店主">{this.state.Data.boss}</Descriptions.Item>
-                    <Descriptions.Item label="联系电话">{this.state.Data.tel}</Descriptions.Item>
-                    <Descriptions.Item label="营业时间">{this.state.Data.time}</Descriptions.Item>
-                    <Descriptions.Item label="店铺地址">{this.state.Data.address}</Descriptions.Item>
-                    <Descriptions.Item label="邮编">{this.state.Data.youbian}</Descriptions.Item>
-                    <Descriptions.Item label="其他">{this.state.Data.description}</Descriptions.Item>
+                    {
+                        this.state.content.map((item, index) => {
+                            return <Descriptions.Item key={index} label={item.title} >{this.state.Data[item.titleIndex]}</Descriptions.Item>
+                        })
+                    }
                 </Descriptions>
                 <CollectionCreateForm
                     wrappedComponentRef={this.saveFormRef}
                     visible={this.state.visible}
                     onCancel={this.handleCancel}
                     onCreate={this.handleCreate}
+                    content={this.state.content}
                 />
             </div>
         );
